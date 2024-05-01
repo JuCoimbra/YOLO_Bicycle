@@ -8,7 +8,6 @@ install: ## Install Python requirements.
 	python -m pip install --upgrade pip setuptools wheel poetry
 	poetry lock
 	poetry install --no-root
-	poetry run pre-commit install
 
 .PHONY: run
 run: ## Run the project.

@@ -2,16 +2,32 @@ import gdown
 import cv2
 from git import Repo
 import numpy as np
+from dotenv import load_dotenv
 from os import path, makedirs, environ
 
+# Carregando as variáveis de ambiente do arquivo .env
+load_dotenv()
+yoloPath = environ["YOLO_PATH"]
+weightsPath = environ["YOLO_WEIGHTS"]
+modelPath = environ["YOLO_MODEL"]
+classesPath = environ["YOLO_CLASSES"]
+gitYPath = environ["GITY_PATH"]
+videoPath = environ["VIDEO"]
+trackedVideoPath = environ["TRACKED_VIDEO"]
 
-yoloPath = environ[YOLO_PATH]
-weightsPath = environ[YOLO_WEIGHTS]
-modelPath = environ[YOLO_MODEL]
-classesPath = environ[YOLO_CLASSES]
-videoPath = environ[VIDEO]
-trackerVideoPath = environ[TRACKER_VIDEO]
 
+def configureYOLO():
+    if not path.exists(yoloPath ):
+        makedirs(path.dirname(yoloPath))
+
+    if not path.exists(weightsPath):
+        # Baixar os pesos pré-treinados
+        gdown.download('https://pjreddie.com/media/files/yolov3.weights', weightsPath, quiet=False)
+
+    if not path.exists(gitYPath):
+        Repo.clone_from('https://github.com/pjreddie/darknet.git', gitYPath)
+
+configureYOLO()
 
 # Carregar o modelo YOLO
 net = cv2.dnn.readNet(weightsPath, modelPath)
@@ -33,42 +49,28 @@ if not cap.isOpened():
  exit()
 
 # Inicializar o rastreador de objetos
-tracker = cv2.TrackerCSRT_create()
+tracked = cv2.TrackerCSRT.create()
 
 # Inicializar a lista de objetos detectados
 objects = []
 
 # Vídeo de saida
 codec = cv2.VideoWriter_fourcc(*'XVID')
-output_video = cv2.VideoWriter(trackerVideoPath, codec, 30, (int(cap.get(3)), int(cap.get(4))))
+output_video = cv2.VideoWriter(trackedVideoPath, codec, 30, (int(cap.get(3)), int(cap.get(4))))
 
 
-def configureYOLO():
-    if not path.exists(yoloPath ):
-        makedirs(path.dirname(yoloPath))
-
-    if not path.exists(weightsPath):
-        # Baixar os pesos pré-treinados
-        gdown.download('https://pjreddie.com/media/files/yolov3.weights', weightsPath, quiet=False)
-
-    if not path.exists(videoPath):
-        # Baixar e colocar na pasta YOLO
-        gdown.download('https://pixabay.com/pt/videos/andar-de-bicicleta-faça-exercício-27268/', videoPath, quiet=False)
-
-    if not path.exists(yoloPath + 'darknet'):
-        Repo.clone_from('https://github.com/pjreddie/darknet.git', yoloPath)
 
 def update_objects_box(frame):
   for obj in objects:
     if frame is None:
       continue
 
-    if not tracker:
+    if not tracked:
       print("O rastreador não está inicializado corretamente.")
       return
 
     detection = obj[0]
-    ret, box = tracker.update(frame)
+    ret, box = tracked.update(frame)
 
 
     if ret:
@@ -189,7 +191,7 @@ if __name__ == "__main__":
       if not objects:
         objects.append(object_det)
         bbox_obj = [round(num) for num in object_det[1]]
-        tracker.init(frame, tuple(bbox_obj))
+        tracked.init(frame, tuple(bbox_obj))
         continue
 
       # Comparar o objeto detectado com as bicicletas já contadas
