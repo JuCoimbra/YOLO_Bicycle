@@ -14,18 +14,6 @@ install: ## Install Python requirements.
 run: ## Run the project.
 	poetry run python -m src.app
 
-# .PHONY: run-example-script
-# run-example-script: ## Run first example script.
-# 	poetry run python src/scripts/example_xyz.py
-
-# .PHONY: run-env-var-usage-example-script
-# run-env-var-example-script: ## Run environment variables usage example script.
-# 	poetry run python src/scripts/example_env.py
-
-.PHONY: notebook
-notebook: ## Start Jupyter Notebook.
-	poetry run jupyter notebook --notebook-dir=src/notebooks/ --browser='open %s'
-
 .PHONY: pre-commit
 pre-commit: ## Run pre-commit checks.
 	poetry run pre-commit run --config ./.pre-commit-config.yaml
