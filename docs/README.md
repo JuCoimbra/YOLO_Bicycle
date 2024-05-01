@@ -1,5 +1,13 @@
 # YOLO_Bicycle
 
+## Use YOLO_Bicycle
+For use YOLO_Bicycle, clone the git and run:
+
+```
+make install
+make run
+```
+
 ## Transfer Learning
 
 O aprendizado por transferência(ou transfer learning, em inglês) é uma técnica fundamental em aprendizado de máquina, especialmente quando lidamos com conjuntos de dados limitados. Essa técnica se baseia na ideia de reutilizar o conhecimento adquirido por modelos pré-treinados em tarefas específicas para resolver problemas relacionados. Por exemplo, se uma rede neural artificial previamente treinada foi bem-sucedida na resolução de um problema, seus conhecimentos podem ser transferidos e adaptados para resolver um problema similar.
