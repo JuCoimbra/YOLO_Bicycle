@@ -25,7 +25,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-src/yolo/
+src/yolo/darknet
+src/yolo/yolov3.weights
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
