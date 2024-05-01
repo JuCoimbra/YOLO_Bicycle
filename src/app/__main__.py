@@ -166,7 +166,7 @@ def calculate_overlap(box1, box2):
     return iou
 
 
-if '__name__' == '__main__':
+if __name__ == "__main__":
    while True:
     # Lê um frame do vídeo. Ret representa o sucesso ou falha da leitura
     ret, frame = cap.read()
