@@ -1,7 +1,7 @@
 # YOLO_Bicycle
 
 ## Use YOLO_Bicycle
-For use YOLO_Bicycle, clone the git and run:
+For use YOLO_Bicycle, clone the repository and run:
 
 ```
 make install
