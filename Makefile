@@ -13,9 +13,10 @@ install: ## Install Python requirements.
 run: ## Run the project.
 	poetry run python -m src.app
 
-.PHONY: pre-commit
-pre-commit: ## Run pre-commit checks.
-	poetry run pre-commit run --config ./.pre-commit-config.yaml
+.PHONY: format
+format: ## Run formatter.
+	poetry run python -m black .
+	poetry run python -m isort .
 
 .PHONY: patch
 patch: ## Bump project version to next patch (bugfix release/chores).
