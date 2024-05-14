@@ -1,10 +1,11 @@
-
-from datetime import datetime
 import os
+from datetime import datetime
+
 import cv2
+import tqdm
+
 from src.app.services.detection_service import DetectionService
 from src.app.settigs import Settings
-import tqdm
 
 
 def main():
@@ -28,7 +29,13 @@ def main():
     # Vídeo de saida
     codec = cv2.VideoWriter_fourcc(*"XVID")
     output_video = cv2.VideoWriter(
-        os.path.join( Settings.trackedVideoFolderPath, f"tracked_video_{datetime.now().timestamp()}.avi"), codec, 30, (int(cap.get(3)), int(cap.get(4)))
+        os.path.join(
+            Settings.trackedVideoFolderPath,
+            f"tracked_video_{datetime.now().timestamp()}.avi",
+        ),
+        codec,
+        30,
+        (int(cap.get(3)), int(cap.get(4))),
     )
 
     frame_count = Settings.max_frames or cap.get(cv2.CAP_PROP_FRAME_COUNT)
@@ -45,7 +52,9 @@ def main():
         DetectionService.update_objects_box(frame, detected_objects, tracked)
 
         # Lista das caixas delimitadoras (x, y, w, h) das bicicletas identificadas
-        detected_objects = DetectionService.detect_objects(frame, net, output_layers, output_video)
+        detected_objects = DetectionService.detect_objects(
+            frame, net, output_layers, output_video
+        )
 
         # Comparar detecções com objetos rastreados
         for object_det in detected_objects:
@@ -74,7 +83,6 @@ def main():
         # TODO: essa condição deveria estar dentro de uma função com nome autoexplicativo
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
-
 
     print(f"Objectos detectados: {len(detected_objects)}")
     cap.release()

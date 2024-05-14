@@ -10,6 +10,7 @@ CLASSES = open(Settings.classesPath, "r").read().strip().split("\n")
 np.random.seed(42)
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
+
 class DetectionService:
     @staticmethod
     def update_objects_box(frame, objects, tracked):
@@ -34,16 +35,20 @@ class DetectionService:
                     frame, class_id, round(x), round(y), round(x + w), round(y + h)
                 )
 
-
-    @staticmethod# Traça um retangulo em volta do objeto detectado
+    @staticmethod
     def draw_bounding_box(img, class_id, x, y, xw, yh):
+        """
+        Traça um retangulo em volta do objeto detectado
+        """
         label = str(CLASSES[class_id])
 
         color = COLORS[class_id]
 
         cv2.rectangle(img, (x, y), (xw, yh), color, 2)
 
-        cv2.putText(img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        cv2.putText(
+            img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2
+        )
 
     @staticmethod
     def detect_objects(frame, net, output_layers, output_video):
@@ -100,7 +105,7 @@ class DetectionService:
     @staticmethod
     def calculate_overlap(box1, box2):
         """
-            Calcula a Intersection over Union (IoU) dos objetos.
+        Calcula a Intersection over Union (IoU) dos objetos.
         """
         # Extrair as coordenadas das caixas delimitadoras
         x1, y1, w1, h1 = box1
@@ -128,7 +133,7 @@ class DetectionService:
         iou = intersection_area / float(union_area)
 
         return iou
-    
+
     @staticmethod
     def load_yolo():
         return cv2.dnn.readNet(Settings.weightsPath, Settings.modelPath)
